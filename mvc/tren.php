@@ -14,7 +14,7 @@
 	    	if (isset($array['id_estacion']))  		$this->setIDEstacion($array['id_estacion']			);
 	    }
 		public function setIdTren($valor)		 { $this->id_tren = 		   (int)$valor; }
-		public function setIdMaquinista($valor)	 { $this->id_maquinista = 	(string)$valor; }
+		public function setIdMaquinista($valor)	 { $this->id_maquinista = 	((string)$valor!="")?(string)$valor:null; }
 		public function setTxTren($valor)		 { $this->tx_tren = 		(string)$valor; }
 		public function setFcConstruccion($valor){ $this->fc_construccion = (string)$valor; }
 		public function setIDEstacion($valor)	 { $this->id_estacion = 	   (int)$valor; }
@@ -29,10 +29,21 @@
 	
 	class Tren extends mdlTren {
 		private $ver_finales;		#filtro: ¿incluir estaciones finales? 1 Sí : 0 No
+		private $ln_estacion;       #filtro: Array con todas las estaciones de la línea del tren
 		
 		public function setVerFinales($valor) { $this->ver_finales = (int)$valor; }
-		public function getVerFinales()		  { return $this->ver_finales; 		  }
-	
+		public function setLnEstacion($valor) {
+			if ($valor == "") $this->ln_estacion = null;
+			else {
+				$estacion = new Estacion();
+				$this->ln_estacion = $estacion->lineaIdEstacion($valor);
+				unset($estacion);
+			}
+		}
+		
+		public function getVerFinales()	{ return $this->ver_finales; 		  }
+		public function getLnEstacion() { return $this->ln_estacion;    }
+		
 		private function autoIncrement() {
 			$datos = array ();
 			$query = "select IFNULL(max(id_tren),0) id_tren
@@ -46,7 +57,9 @@
 			$datos = array (
 						0=> array("tipo"=>'i', "dato"=>$this->getIdTren()),
 						1=> array("tipo"=>'s', "dato"=>$this->getIdMaquinista()),
-						2=> array("tipo"=>'i', "dato"=>$this->getVerFinales())
+						2=> array("tipo"=>'i', "dato"=>$this->getVerFinales()),
+						3=> array("tipo"=>'s', "dato"=>$this->getLnEstacion()),
+					    4=> array("tipo"=>'s', "dato"=>$this->getLnEstacion())
 					 );
 			$query = "select id_tren,
 					         tx_tren,
@@ -61,6 +74,8 @@
 					                               from estacion
 					                              where id_estacion_next > 0)
 					         )
+					     and (FIND_IN_SET(id_estacion,?) > 0 or ? is null)
+					
 					   order
 					      by id_tren desc";
 			$link = new ConexionSistema();

@@ -4,6 +4,10 @@
 		case 'trenes':
 			require_once 'pantallas/indice.php';
 			break;
+		case 'verVagonDB':
+		case 'detalle':
+			require_once 'pantallas/detalle.php';
+			break;
 		case 'conf_estaciones':
 		case 'configuracion':
 			require_once 'pantallas/configuracion.php';

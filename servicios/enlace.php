@@ -20,6 +20,8 @@
     		$this->extra = $datos['extra'];
     	
     		switch ($datos['irA']) {
+    			case 'verVagonDB':
+    			case 'detalle':
     			case 'trenes':
     				$this->menu = 'trenes';
     				break;
@@ -51,5 +53,31 @@
   	
   }
   $enlace = new Enlace();
+  
+  class Buscador {
+  	private $maquinista;
+  	private $finalizado;
+  	private $estacion;
+  	
+  	function getMaquinista() { return $this->maquinista; }
+  	function getFinalizado() { return $this->finalizado; }
+  	function getEstacion()   { return $this->estacion;   }
+  	
+  	function setBusqueda($datos) { 
+  		$this->maquinista = $datos['buscaMaq'];
+  		$this->estacion   = $datos['buscaEst'];
+  		if ($datos['buscaFin'] === "S" || $datos['buscaFin'] === "s" || $datos['buscaFin'] === "1" || $datos['buscaFin'] === 1) $this->finalizado = 1; else $this->finalizado = 0;
+  		$_SESSION['data']['buscar']['maquinista'] = $this->maquinista;
+  		$_SESSION['data']['buscar']['finalizado'] = $this->finalizado;
+  		$_SESSION['data']['buscar']['estacion']   = $this->estacion;
+  	}
+  	
+  	function __construct() {
+		$this->maquinista = $_SESSION['data']['buscar']['maquinista'];
+  		$this->finalizado = $_SESSION['data']['buscar']['finalizado'];
+  		$this->estacion   = $_SESSION['data']['buscar']['estacion'];
+  	}
+  }
+  $buscador = new Buscador();
 
 ?>

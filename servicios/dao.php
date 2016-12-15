@@ -2,7 +2,6 @@
 # aquí estás todo lo relacionado con la conexión a base de datos
 # en principio la conexión propia de la aplicación, las propias de la intervención no están aquí
 
-require_once('servicios/configuracion.php');
 /*
  * Very Special Thanks to Guido
  * for you aportation in http://php.net/manual/es/mysqli-stmt.bind-param.php

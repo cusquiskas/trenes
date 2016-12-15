@@ -1,7 +1,7 @@
 <?php
 	error_reporting(E_ALL ^ E_NOTICE);
  	session_start();
- 	require_once('mvc/home.php');
+ 	require_once('controlador/home.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,6 +19,8 @@
   <script src="js/datetimepicker.js" type="text/javascript"></script>
   <script src="js/funciones.js" type="text/javascript"></script>
   <script src="js/bootbox.min.js" type="text/javascript"></script>
+  <script src="js/jquery.sortable.js" type="text/javascript"></script>
+  <script src="js/ajax.js" type="text/javascript"></script>
 <?php 
 if (in_array($enlace->getEnlace(), ['conf_estaciones','configuracion'])) echo '<script src="js/conf_estacion.js" type="text/javascript"></script>';
 ?>

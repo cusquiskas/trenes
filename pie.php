@@ -1,2 +1,3 @@
 <footer class="container-fluid text-right"><p>Un producto de CusQuisKas &amp; CyberAlmirante Thrawn.</p></footer>
 <form name="navegador" style="display:none" method="post"><input name="irA"><input name="extra"><input name="scroll"></form>
+<form name="buscador" style="display:none" method="post"><input name="buscaMaq" value="<?php echo $buscador->getMaquinista(); ?>"><input name="buscaFin" value="<?php echo $buscador->getFinalizado(); ?>"><input name="buscaEst" value="<?php echo $buscador->getEstacion(); ?>"></form>

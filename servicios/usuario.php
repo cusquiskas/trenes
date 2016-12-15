@@ -4,22 +4,31 @@
  	private $pw_maquinista;
  	private $tx_correo;
  	private $tx_sesion;
+ 	private $tx_activo;
  	
  	public function getIdMaquinista() { return $this->id_maquinista; }
  	public function getPwMaquinista() { return $this->pw_maquinista; }
  	public function getTxCorreo()     { return $this->tx_correo;     }
  	public function getTxSesion()     { return $this->tx_sesion;	 }
+ 	public function getTxActivo()     { return $this->tx_activo;     }
  	
  	public function setIdMaquinista ($valor) { $this->id_maquinista = (string)$valor; }
  	public function setPwMaquinista ($valor) { $this->pw_maquinista = (string)$valor; }
  	public function setTxCorreo     ($valor) { $this->tx_correo     = (string)$valor; }
  	public function setTxSesion     ($valor) { $this->tx_sesion     = (string)$valor; }
+ 	public function setTxActivo     ($valor) {
+ 		if     ($valor === "S" || $valor === "s" || $valor === "1" || $valor === 1) $this->tx_activo = 'S';
+ 		elseif ($valor === "N" || $valor === "n" || $valor === "0" || $valor === 0) $this->tx_activo = 'N';
+ 		else   $this->tx_activo = null;
+ 	}
 
  	public function setDatos ($array) {
  		$this->setIdMaquinista($array["id_maquinista"]);
  		$this->setPwMaquinista($array["pw_maquinista"]);
  		$this->setTxCorreo    ($array["tx_correo"]);
  		$this->setTxSesion    ($array["tx_sesion"]);
+ 		$this->setTxActivo    ($array["tx_activo"]);
+ 		
  	}
  	public function getDatos() { 
  		return array(
@@ -47,9 +56,14 @@
  		$this->setIdMaquinista($id_maquinista);
  		$datos = $this->recupera();
  		if (count($datos)==1) {
- 			#más adelante habrá que comprobar la contraseña con el AD
- 			$this->setDatos($datos[0]);
- 			$_SESSION['data']['user']['id'] = $id_maquinista;
+ 			if ($datos[0]['tx_activo']!='S') {
+ 				$this->setIdMaquinista("");
+ 				new MensajeSistema('¡Tu licencia está caducada!', 1);
+ 			} else {
+ 				#más adelante habrá que comprobar la contraseña con el AD
+ 				$this->setDatos($datos[0]);
+ 				$_SESSION['data']['user']['id'] = $id_maquinista;
+ 			}
  		} else {
  			$this->setIdMaquinista("");
  			new MensajeSistema('¡No se ha encontrado tu licencia!', 1);

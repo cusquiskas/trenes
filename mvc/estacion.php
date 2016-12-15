@@ -4,16 +4,16 @@
 		private $tx_estacion;		#varchar(200) 	
 		private $id_estacion_next;	#int(11) 	
 		private $ck_inicial;		#char(1)
-	
+		
 		public function set($array) {
 			if (isset($array['id_estacion'])) 		$this->setIdEstacion	($array['id_estacion']		);
 			if (isset($array['tx_estacion'])) 		$this->setTxEstacion	($array['tx_estacion']		);
 			if (isset($array['id_estacion_next'])) 	$this->setIdEstacionNext($array['id_estacion_next']	);
 			if (isset($array['ck_inicial'])) 		$this->setCkInicial		($array['ck_inicial']		);
 		}
-		public function setIdEstacion 	  ($valor) { $this->id_estacion = 	   (int)$valor; }
+		public function setIdEstacion 	  ($valor) { $this->id_estacion = 	   ($valor==null)?null:(int)$valor; }
 		public function setTxEstacion 	  ($valor) { $this->tx_estacion = 	(string)$valor; }
-		public function setIdEstacionNext ($valor) { $this->id_estacion_next = (int)$valor; }
+		public function setIdEstacionNext ($valor) { $this->id_estacion_next = ($valor==null)?null:(int)$valor; }
 		public function setCkInicial 	  ($valor) { $this->ck_inicial = 	(string)$valor; }
 		
 		public function getIdEstacion 	  () { return $this->id_estacion; 		}
@@ -24,6 +24,11 @@
 	}
 	
 	class Estacion extends mdlEstacion {
+		private $ln_estacion;       #filtro: Array con todas las estaciones de la línea del tren
+		
+		public function setLnEstacion ($valor) { $this->ln_estacion =   (string)$valor; }
+		public function getLnEstacion       () { return $this->ln_estacion;             }
+		
 		private function autoIncrement() {
 			$datos = array ();
 			$query = "select IFNULL(max(id_estacion),0) id_estacion
@@ -36,12 +41,17 @@
 		private function consulta() {
 			$datos = array (
 					0=> array("tipo"=>'i', "dato"=>$this->getIdEstacion()),
-					1=> array("tipo"=>'s', "dato"=>$this->getCkInicial())
+					1=> array("tipo"=>'s', "dato"=>$this->getCkInicial()),
+					2=> array("tipo"=>'i', "dato"=>$this->getIdEstacionNext()),
+					3=> array("tipo"=>'s', "dato"=>$this->getLnEstacion()),
+					4=> array("tipo"=>'s', "dato"=>$this->getLnEstacion())
 			);
 			$query = "select *
 					    from estacion
 					   where id_estacion = IFNULL(?, id_estacion)
 					     and ck_inicial  = IFNULL(?, ck_inicial)
+						 and id_estacion_next = IFNULL(?, id_estacion_next)
+					     and (FIND_IN_SET(id_estacion,?) > 0 or ? is null)
 					   order
 					      by tx_estacion";
 			$link = new ConexionSistema();
@@ -84,6 +94,29 @@
 		}
 		private function delete() {
 			#Hay que hacer muchas cosas antes de borrar una estación
+		}
+		
+		public function lineaIdEstacion($valor) {
+			$linea = (string)$valor;
+			$tmp = new Estacion();
+			$tmp->setIdEstacion($valor);
+			$dato = $tmp->consulta();
+			$tmp->setIdEstacion(null);
+			while ($dato[0]['ck_inicial']!='1') {
+				$tmp->setIdEstacionNext($dato[0]['id_estacion']);
+				$dato = $tmp->consulta();
+				$linea = $dato[0]['id_estacion'].','.$linea;
+			}
+			$tmp->setIdEstacion($valor);
+			$tmp->setIdEstacionNext(null);
+			$dato = $tmp->consulta();
+			while ($dato[0]['id_estacion_next'] > 0) {
+				$linea.= ','.$dato[0]['id_estacion_next'];
+				$tmp->setIdEstacion($dato[0]['id_estacion_next']);
+				$dato = $tmp->consulta();
+			}
+			unset($tmp);
+			return $linea;
 		}
 		
 		public function listar() {
