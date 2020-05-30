@@ -35,7 +35,7 @@
 					instrucciones:getId('inpInstDB').value
 				},
 				retorno: function (s,d,e) {
-	 						if (s) {
+							if (s) {
 								getForm('frmDetalle').submit();
 	 		 	 	 		} else {
 	 	 	 				    bootbox.alert({title:'Error en la recuperación del vagón',message:d.error});
@@ -60,17 +60,16 @@
 			getId('inpInstDB').value = "";
 
 			getId('id_vagon').value = vDB;
-
 			invocaAjax({
 				direccion:'/trenes/controlador/detalleDB.php',
 				parametros:{xchn:'JSON',id_vagon:vDB, accion:'recuperacion'},
 				retorno: function (s,d,e) {
-	 						if (s) {
+							if (s) {
 								var cad="",i;
 								for (i=0; i<d.root.dato.length; i++) {
 									getId('spaNomVagonDB').innerHTML = d.root.referencia;
 									getId('inpNomVagonDB').value = d.root.referencia;
-									getId('spaInstDB').innerHTML+= "<pre>"+d.root.dato[i].tx_fila+"</pre>";
+									getId('spaInstDB').innerHTML+= "<pre>"+d.root.dato[i].tx_fila+";</pre>";
 	 								getId('inpInstDB').value+= d.root.dato[i].tx_fila.replace(/<br\s*[\/]?>/gi, "\n")+";\n\n";
 	 								$("#modalGestionVagonDB").modal();	
 								}
