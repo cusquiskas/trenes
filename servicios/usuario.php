@@ -60,9 +60,28 @@
  				$this->setIdMaquinista("");
  				new MensajeSistema('¡Tu licencia está caducada!', 1);
  			} else {
- 				#más adelante habrá que comprobar la contraseña con el AD
- 				$this->setDatos($datos[0]);
- 				$_SESSION['data']['user']['id'] = $id_maquinista;
+				$e["message"] = "";
+				/*****************/
+				$dbc = oci_new_connect(
+					'newintra','nintra01', 
+					'(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST =192.168.156.28)(PORT = 1521) (HASH = '.$rnum.')    )
+					(CONNECT_DATA =(SID = PRTLEMP))  )'
+				);
+				$sql = "begin ACTDIR.PKG_DBMS_USR.LOGIN(:usr,:pas); end;";
+				$stid = oci_parse($dbc, $sql);
+				oci_bind_by_name($stid,':pas',$contraseña);
+				oci_bind_by_name($stid,':usr',$id_maquinista);
+				@oci_execute($stid,OCI_DEFAULT);
+				$e = oci_error($stid);
+				oci_close($dbc);
+				/******************/
+				if ($e["message"] == '') {
+					$this->setDatos($datos[0]);
+					$_SESSION['data']['user']['id'] = $id_maquinista;
+				} else {
+					$this->setIdMaquinista("");
+					new MensajeSistema($e["message"], 1);
+				}
  			}
  		} else {
  			$this->setIdMaquinista("");
