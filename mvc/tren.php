@@ -182,12 +182,12 @@
                     3 => array('tipo' => 'i', 'dato' => $this->getIDEstacion()),
                     4 => array('tipo' => 'i', 'dato' => $this->getIdTren()),
             );
-            $query = 'update tren
+            $query = "update tren
 					     set id_maquinista = ?,
 							 tx_tren = ?, 
-					         fc_construccion = ?,
+					         fc_construccion = STR_TO_DATE(?,'%d/%m/%Y'),
 							 id_estacion = ?
-					   where id_tren = ?';
+					   where id_tren = ?";
             $link = new ConexionSistema();
             $link->ejecuta($query, $datos);
             $link->close();

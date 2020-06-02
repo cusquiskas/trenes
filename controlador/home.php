@@ -23,6 +23,23 @@
     }
 
     switch ($_POST['accion']) {
+        case 'guardar_tren':
+            $Tren = new Tren();
+            $Tren->set($_POST);
+            if ($Tren->getIdTren() != ""){
+                $Oldtren = new Tren();
+                $Oldtren->setIdTren($Tren->getIdTren());
+                $temp = $Oldtren->listar();
+                $Tren->setIDEstacion($temp[0]->getIDEstacion());
+                $Tren->setFcConstruccion($temp[0]->getFcConstruccion());
+                unset($Oldtren);
+                unset($temp);
+            } else {
+                $Tren->setFcConstruccion(date('d/m/Y'));
+            } 
+            $Tren->guardar();
+            unset($Tren);
+            break;
         case 'identificacion':
             $Usuario->valida($_POST['maquinista'], $_POST['password']);
             break;
