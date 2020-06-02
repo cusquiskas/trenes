@@ -1,29 +1,29 @@
-     <div id="modalGestionVagonDB" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-	<div class="modal-content" style="width:600px;">
-	  <form role="form" method="post" name="frmDetalle">
-	  <div class="modal-header btn-primary">
-	   <h4 class="modal-title">
-	   	<span id="spaNomVagonDB" style="display: inline">Detalle Libre/Instrucciones</span>
-	   </h4>
-	   <input class="form-control" name="inpNomVagonDB" id="inpNomVagonDB" value="" style="display: none; ">
-	  </div>
-	  
-	  <div class="modal-body">
-	    <textarea rows="20" cols="68" name="inpInstDB" id="inpInstDB" style="display: none; font-family:Courier New, monospace;"></textarea>
-	    <span id="spaInstDB" style="display:inline; overflow:auto;"></span>
-	  </div>
-	  <div class="modal-footer">
-	    <input type="hidden" id="id_vagon" value="">
-	    <button id="btnDividir" style="display:none" type="button" class="btn btn-warning" onClick="guardar('secuencia')">Secuencia SQL</button>
-	    <button id="btnGuardar" style="display:none" type="button" class="btn btn-warning" onClick="guardar('procedimiento')">Procedimiento</button>
-	    <button id="btnEditar" style="display:inline" type="button" class="btn btn-success" onClick="editar()">Editar</button>
-	    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-	  </div>
-	 </form> 
+<div id="modalGestionVagonDB" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width:600px;">
+			<form role="form" method="post" name="frmDetalle">
+				<div class="modal-header btn-primary">
+					<h4 class="modal-title">
+						<span id="spaNomVagonDB" style="display: inline">Detalle Libre/Instrucciones</span>
+					</h4>
+					<input class="form-control" name="inpNomVagonDB" id="inpNomVagonDB" value="" style="display: none; ">
+				</div>
+
+				<div class="modal-body">
+					<textarea rows="20" cols="68" name="inpInstDB" id="inpInstDB" style="display: none; font-family:Courier New, monospace;"></textarea>
+					<span id="spaInstDB" style="display:inline; overflow:auto;"></span>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" id="id_vagon" value="">
+					<button id="btnDividir" style="display:none" type="button" class="btn btn-warning" onClick="guardar('secuencia')">Secuencia SQL</button>
+					<button id="btnGuardar" style="display:none" type="button" class="btn btn-warning" onClick="guardar('procedimiento')">Procedimiento</button>
+					<button id="btnEditar" style="display:inline" type="button" class="btn btn-success" onClick="editar()">Editar</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</form> 
+		</div>
 	</div>
-      </div>
-    </div>
+</div>
 
     <script>
 		function guardar(accion) {
